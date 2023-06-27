@@ -33,6 +33,7 @@ const Contacts = () => {
       </Container>
     </>
   );
+  
 };
 
 export default Contacts;
