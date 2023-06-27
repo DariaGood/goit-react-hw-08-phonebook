@@ -1,24 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { theme } from './theme';
-import { ThemeProvider } from 'styled-components';
-import { BrowserRouter } from 'react-router-dom';
 import { App } from 'components/App';
 import './index.css';
+import { Provider } from 'react-redux';
+import { persistor, store } from './redux/store';
+import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './redux/store';
+import { HelmetProvider } from 'react-helmet-async';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
+    <HelmetProvider>
+      <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter basename="/goit-react-hw-08-phonebook">
             <App />
           </BrowserRouter>
         </PersistGate>
-      </ThemeProvider>
-    </Provider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );

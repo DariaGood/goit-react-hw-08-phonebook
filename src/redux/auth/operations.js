@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
 
@@ -15,11 +16,15 @@ export const register = createAsyncThunk(
   'auth/register',
   async (credentials, thunkAPI) => {
     try {
-      const res = await axios.post('/users/signup', credentials);
-      setAuthHeader(res.data.token);
-      return res.data;
+      const response = await axios.post('/users/signup', credentials);
+      setAuthHeader(response.data.token);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(
+        toast.error(
+          `Enter the data and check it. If it doesn't work, try again later.`
+        )
+      );
     }
   }
 );
@@ -28,11 +33,15 @@ export const logIn = createAsyncThunk(
   'auth/login',
   async (credentials, thunkAPI) => {
     try {
-      const res = await axios.post('/users/login', credentials);
-      setAuthHeader(res.data.token);
-      return res.data;
+      const response = await axios.post('/users/login', credentials);
+      setAuthHeader(response.data.token);
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(
+        toast.error(
+          `Enter the data and check it. If it doesn't work, try again later.`
+        )
+      );
     }
   }
 );
@@ -42,11 +51,11 @@ export const logOut = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     await axios.post('/users/logout');
     clearAuthHeader();
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+    return thunkAPI.rejectWithValue(
+      toast.error(`Whoops, something went wrong. Try later`)
+    );
   }
 });
-
-// refresh
 
 export const refreshUser = createAsyncThunk(
   'auth/refresh',
@@ -54,16 +63,18 @@ export const refreshUser = createAsyncThunk(
     const state = thunkAPI.getState();
     const persistedToken = state.auth.token;
 
-    if (!persistedToken) {
+    if (persistedToken === null) {
       return thunkAPI.rejectWithValue('Unable to fetch user');
     }
 
     try {
       setAuthHeader(persistedToken);
-      const res = await axios.get('/users/current');
-      return res.data;
+      const response = await axios.get('/users/current');
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(
+        toast.error(`Whoops, something went wrong. Try later`)
+      );
     }
   }
 );

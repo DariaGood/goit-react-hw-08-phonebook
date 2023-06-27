@@ -1,31 +1,83 @@
-import { HomeContainer, HomeTitle } from 'components/styles/Element.styled';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsLoggedIn, selectUser } from 'redux/auth/slice';
+import { Button } from '@mui/material';
+import { Container, ButtonsBox, Title, Wrapper } from './Home.styled';
+import { Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from 'hooks';
 
 const Home = () => {
-  const isUserLoggedIn = useSelector(selectIsLoggedIn);
-  const user = useSelector(selectUser);
+  const [goLoginPage, setGoLoginPage] = useState(false);
+  const [goRegisterPage, setRegisterPage] = useState(false);
+  const [goContactsPage, setContactsPage] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const handleClick = e => {
+    if (e.target.textContent === 'Log In') setGoLoginPage(true);
+    if (e.target.textContent === 'Register') setRegisterPage(true);
+    if (e.target.textContent === 'My contacts') setContactsPage(true);
+  };
+  if (goLoginPage) {
+    return <Navigate to="/login" replace />;
+  }
+  if (goRegisterPage) {
+    return <Navigate to="/register" replace />;
+  }
+  if (goContactsPage) {
+    return <Navigate to="/contacts" replace />;
+  }
+  return (
+    <Container>
+      <Wrapper>
+        <Title>Phonebook</Title>
+        <ButtonsBox>
+          {!isLoggedIn && (
+            <>
+              <Button
+                variant="outlined"
+                size="medium"
+                onClick={handleClick}
+                style={{
+                  width: '260px',
+                  backgroundColor: '#0069d9',
+                  color: '#fff',
+                  textTransform: 'none',
+                  marginBottom: 30,
+                }}
+              >
+                Log In
+              </Button>
 
-
-  return isUserLoggedIn ? (
-    <HomeContainer>
-      <HomeTitle>Welcome to PhoneBook, {user.name}!</HomeTitle>
-      <h2>
-        To create your contact, click <Link to="contacts">here</Link>
-      </h2>
-    </HomeContainer>
-  ) : (
-    <HomeContainer>
-      <HomeTitle>Welcome to PhoneBook!</HomeTitle>
-      <h2>
-        First time there? <Link to="register">Sign Up</Link>
-      </h2>
-
-      <h2>
-        Already have account? <Link to="login">Sign in</Link>
-      </h2>
-    </HomeContainer>
+              <Button
+                variant="outlined"
+                size="medium"
+                onClick={handleClick}
+                style={{
+                  width: '260px',
+                  backgroundColor: '#0069d9',
+                  color: '#fff',
+                  textTransform: 'none',
+                }}
+              >
+                Register
+              </Button>
+            </>
+          )}
+          {isLoggedIn && (
+            <Button
+              variant="outlined"
+              size="medium"
+              onClick={handleClick}
+              style={{
+                width: '260px',
+                backgroundColor: '#0069d9',
+                color: '#fff',
+                textTransform: 'none',
+              }}
+            >
+              My contacts
+            </Button>
+          )}
+        </ButtonsBox>
+      </Wrapper>
+    </Container>
   );
 };
 

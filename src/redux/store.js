@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+import { contactsReducer } from './contacts/contactsSlice';
+import { filterReducer } from './contacts/filterSlice';
+import { authReducer } from './auth/authSlice';
 import storage from 'redux-persist/lib/storage';
 import {
+  persistReducer,
   persistStore,
-  PERSIST,
   FLUSH,
   REHYDRATE,
   PAUSE,
+  PERSIST,
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import { filterReducer } from './filter/filterSlice';
-import { authReducer } from './auth/slice';
-import { contReducer } from './contacts/contactSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -23,7 +23,7 @@ const authPersistConfig = {
 export const store = configureStore({
   reducer: {
     auth: persistReducer(authPersistConfig, authReducer),
-    phonebook: contReducer,
+    contacts: contactsReducer,
     filter: filterReducer,
   },
   middleware: getDefaultMiddleware =>

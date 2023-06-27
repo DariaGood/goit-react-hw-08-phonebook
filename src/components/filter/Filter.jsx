@@ -1,28 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Input } from 'components/styles/Element.styled';
-import { getFilter, setFilter } from 'redux/filter/filterSlice';
-import { H2 } from 'components/title/Title';
-
+import { setStatusFilter } from '../../redux/contacts/filterSlice';
+import { selectFilter } from 'redux/contacts/selectors';
+import TextField from '@mui/material/TextField';
+import { ComponentContainer } from './Filter.styled';
 export const Filter = () => {
-  const filter = useSelector(getFilter);
   const dispatch = useDispatch();
+  const filter = useSelector(selectFilter);
 
-  const onChange = event => {
-    dispatch(setFilter(event.currentTarget.value));
+  const handleChange = e => {
+    dispatch(setStatusFilter(e.currentTarget.value));
   };
-
   return (
-    <div>
-      <H2 title="Find contacts by name" />
-      <Input
-        type="text"
-        name="filter"
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-        onChange={onChange}
-        value={filter}
-        placeholder="Enter name"
+    <ComponentContainer>
+      <TextField
+        id="filter"
+        size="small"
+        label="Find contacts by name"
+        variant="outlined"
+        value={filter.value}
+        onChange={handleChange}
+        style={{ marginBottom: '20px', width: '328px', marginTop: 20 }}
       />
-    </div>
+    </ComponentContainer>
   );
 };
